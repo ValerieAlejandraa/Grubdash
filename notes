@@ -1,0 +1,8 @@
+- run tests from the command line
+- use common middleware packages
+- receive requests through routes
+- Access relevant information through route parameters
+- Build an API following RESTful design principles 
+- write custom middleware functions
+
+-  What is the difference between the controller and route file . What is a middleware and handler function ? What is the purpose of a Utils folder. What is a hook ? What is a side effect?
