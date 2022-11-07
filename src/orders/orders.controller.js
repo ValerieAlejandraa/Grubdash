@@ -11,7 +11,7 @@ const nextId = require("../utils/nextId");
 // TODO: Implement the /dishes handlers needed to make the tests pass
 //list
 function list(req, res) {
-  res.json({ data: orders });
+  res.json({ data: res.locals.orders });
 }
 
 //validation middleware
@@ -77,7 +77,7 @@ function update(req, res) {
     foundOrder.status = status;
     foundOrder.dishes =  dishes;
   
-    res.json({ data: foundOrder});
+    res.json({ data : foundOrder});
   }
   
   function destroy(req, res) {
