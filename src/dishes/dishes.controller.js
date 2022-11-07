@@ -31,17 +31,17 @@ function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyI
   return function (req,res,next){
   
   const { data = {} } = req.body; //bracket notation
-  if (data[propertyName].length > 0) {
+  if (data[propertyName]) {
     return next();
   }
   next({ status: 400, message: `Dish must include a ${propertyName}.` });
 
-  if (data[propertyDescription].length > 0) {
+  if (data[propertyDescription]) {
     next();
   }
   next({ status: 400, message: `Dish must include a ${propertyDescription}.` });
 
-  if (data[propertyPrice] > 0) {
+  if (data[propertyPrice]) {
     next();
   }
   next({
@@ -49,7 +49,7 @@ function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyI
     message: `Dish must include a ${propertyPrice} and have a price that is an interger greater tha 0.`,
   });
 
-  if (data[propertyImageURL].length > 0) {
+  if (data[propertyImageURL]) {
     next();
   }
   next({ status: 400, message: `Dish must include a ${propertyImageURL}.` });
