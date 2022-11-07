@@ -28,33 +28,34 @@ function orderIdExists(req, res, next) {
   });
 }
 
-function bodyDataHas(req, res, next) {
-  const { data = {} } = req.body; //bracket notation
-  if (data[propertyDeliverTo].length > 0) {
+function bodyDataHas(propertyDeliverTo, propertyMobileNumber, propertyDishes) {
+  return function (req, res, next){
+    const { data = {} } = req.body; //bracket notation
+  if (data[propertyDeliverTo]) {
     return next();
   }
   next({ status: 400, message: `Order must include a ${propertyDeliverTo}.` });
 
-  if (data[propertyMobileNumber].length > 0) {
+  if (data[propertyMobileNumber]) {
     return next();
   }
   next({ status: 400, message: `Order must include a ${propertyMobileNumber}.` });
 
-  if (data[propertyDishes] > 0 ){
+  if (data[propertyDishes]){
     return next()
   } 
   next({status: 400, message: `Dish ${propertyDishes} must have a quantity that is an integer greater than 0`})
-
+  }
 }
 
 //read function
 function read(req, res, next) {
   //side effect
-  res.json({ data: foundDish });
+  res.json({ data: res.locals.order });
 }
 
 function create(req, res, next) {
-  const { data: { id, deliverTo, mobileNumber, status, dishes } = {} } = req.body;
+  const { data: { deliverTo, mobileNumber, status, dishes } = {} } = req.body;
   const newOrder = {
     id: nextId(),
     deliverTo: deliverTo,
@@ -82,7 +83,7 @@ function update(req, res) {
   
   function destroy(req, res) {
     const { orderId } = req.params;
-    const index = orders.findIndex((order) => order.id === orderId);
+    const index = orders.findIndex((order) => order.id === Number(orderId));
     if (index > -1) {
       orders.splice(index, 1);
     }
@@ -101,7 +102,7 @@ module.exports = {
     create,
   ],
   update: [
-    dishIdExists,
+    orderIdExists,
     bodyDataHas("name"),
     bodyDataHas("deliverTo"),
     bodyDataHas("mobileNumber"),

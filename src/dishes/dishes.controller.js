@@ -26,8 +26,10 @@ function dishIdExists(req, res, next) {
   });
 }
 
-function bodyDataHas(req, res, next) {
-  console.log("Line 30:", req.body)
+function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyImageURL) {
+ 
+  return function (req,res,next){
+  
   const { data = {} } = req.body; //bracket notation
   if (data[propertyName].length > 0) {
     return next();
@@ -51,6 +53,7 @@ function bodyDataHas(req, res, next) {
     next();
   }
   next({ status: 400, message: `Dish must include a ${propertyImageURL}.` });
+}
 }
 
 //read function
