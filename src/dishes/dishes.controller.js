@@ -41,7 +41,7 @@ function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyI
   }
   next({ status: 400, message: `Dish must include a ${propertyDescription}.` });
 
-  if (data[propertyPrice]) {
+  if (data[propertyPrice] === Number && data[propertyPrice] > 0) {
     next();
   }
   next({
@@ -77,8 +77,9 @@ function create(req, res, next) {
 function update(req, res) {
     const dishId = req.params.dishId;
     const foundDish = dishes.find((dish) => dish.id === dishId);
-    const { data: { name, description, price, image_url } = {} } = req.body;
-  
+    const { data: { id, name, description, price, image_url } = {} } = req.body;
+    
+    foundDish.id = id
     foundDish.name = name;
     foundDish.description = description;
     foundDish.price = price;
@@ -93,6 +94,7 @@ module.exports = {
   list,
   read: [dishIdExists, read],
   create: [
+    
     bodyDataHas("name"),
     bodyDataHas("description"),
     bodyDataHas("price"),
