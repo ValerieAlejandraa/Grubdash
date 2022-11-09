@@ -1,4 +1,1 @@
-Set up the API follwoing RESTful design with complex validation, middleware packages and built specific routes so that the frontend developer can demoout some initial design ideas
-
-what is RESTful design principles??
-  - when the server receives data from the client and returns it 
+Set up the API following RESTful design with complex validation and middleware packages. Built specific routes so that the frontend developer can demonstrate some initial design ideas.
