@@ -12,6 +12,12 @@ function list(req, res) {
   res.json({ data: dishes });
 }
 
+//read function
+function read(req, res, next) {
+  //side effect
+  res.json({ data: res.locals.dish });
+}
+
 //validation middleware
 function dishIdExists(req, res, next) {
   const dishId = req.params.dishId;
@@ -26,7 +32,16 @@ function dishIdExists(req, res, next) {
   });
 }
 
-function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyImageURL) {
+//validation hasValidPrice
+function hasValidPrice(req,res,next){
+  const { data: {price} ={}} = req.body 
+  if (Number(price) > 0 && Number.isInteger(price) ){
+     return next();
+  } 
+  next({status: 400, message: "Dish must have a price that is an integer greater than 0"})
+}
+
+function bodyDataHas(propertyName) {
  
   return function (req,res,next){
   
@@ -36,31 +51,9 @@ function bodyDataHas(propertyName, propertyDescription, propertyPrice, propertyI
   }
   next({ status: 400, message: `Dish must include a ${propertyName}.` });
 
-  if (data[propertyDescription]) {
-    next();
-  }
-  next({ status: 400, message: `Dish must include a ${propertyDescription}.` });
-
-  if (data[propertyPrice] === Number && data[propertyPrice] > 0) {
-    next();
-  }
-  next({
-    status: 400,
-    message: `Dish must include a ${propertyPrice} and have a price that is an interger greater tha 0.`,
-  });
-
-  if (data[propertyImageURL]) {
-    next();
-  }
-  next({ status: 400, message: `Dish must include a ${propertyImageURL}.` });
 }
 }
 
-//read function
-function read(req, res, next) {
-  //side effect
-  res.json({ data: foundDish });
-}
 
 function create(req, res, next) {
   const { data: { name, description, price, image_url } = {} } = req.body;
@@ -74,39 +67,62 @@ function create(req, res, next) {
   dishes.push(newDish);
   res.status(201).json({ data: newDish });
 }
+
+//Validation for update PUT /dishes/:dishId
+
+function isValidId(req, res, next) {
+  let {data: { id } } = req.body;
+  const dishId = req.params.dishId;
+     //if id does not exist
+  if (id === null || id === undefined || id === "") {
+    return next();
+  }  //if dish id does not match route id
+  if (id !== dishId) {
+    next({
+      status: 400,
+      message: `Dish id does not match route id. Dish: ${id}, Route: ${dishId}`,
+    });
+  } else {
+    next();
+  }
+}
+
 function update(req, res) {
     const dishId = req.params.dishId;
     const foundDish = dishes.find((dish) => dish.id === dishId);
     const { data: { id, name, description, price, image_url } = {} } = req.body;
-    
+     
+  
     foundDish.id = id
     foundDish.name = name;
     foundDish.description = description;
     foundDish.price = price;
     foundDish.image_url = image_url;
     
-  
     res.json({ data: foundDish });
-  }
+  } 
   
 
 module.exports = {
   list,
-  read: [dishIdExists, read],
+  read: [dishIdExists,read],
   create: [
-    
     bodyDataHas("name"),
     bodyDataHas("description"),
     bodyDataHas("price"),
     bodyDataHas("image_url"),
+    hasValidPrice,
     create,
   ],
+
   update: [
     dishIdExists,
+    isValidId,
     bodyDataHas("name"),
     bodyDataHas("description"),
     bodyDataHas("price"),
     bodyDataHas("image_url"),
+    hasValidPrice,
     update,
   ]
 };

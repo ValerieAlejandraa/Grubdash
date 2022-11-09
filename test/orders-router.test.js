@@ -24,7 +24,7 @@ const validOrder = {
   ],
 };
 
-xdescribe("orders router", () => {
+describe("orders router", () => {
   beforeEach(() => {
     orders.splice(0, orders.length);
   });
