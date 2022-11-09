@@ -27,7 +27,7 @@ function isDishesValid(req, res, next) {
 }
 
 //function to check if the quantity of each dish is valid
-function hasValidQuantity(req, res, next) {
+function hasValidDishQuantity(req, res, next) {
 	const { data: { dishes } = {} } = req.body;
 
 	dishes.forEach((dish, index) => {
@@ -140,7 +140,7 @@ function list(req, res) {
 module.exports = {
 	create: [
 		isDishesValid,
-		hasValidQuantity,
+		hasValidDishQuantity,
 		bodyHasProperty("deliverTo"),
 		bodyHasProperty("mobileNumber"),
 		bodyHasProperty("dishes"),
@@ -151,7 +151,7 @@ module.exports = {
 		orderExists,
 		hasValidId,
 		isDishesValid,
-		hasValidQuantity,
+		hasValidDishQuantity,
 		hasValidStatus,
 		bodyHasProperty("deliverTo"),
 		bodyHasProperty("mobileNumber"),
