@@ -50,7 +50,7 @@ function orderExists(req, res, next) {
 	if (foundOrder) {
 		res.locals.order = foundOrder;
 		return next();
-	}
+	} 
 
 	next({ status: 404, message: `Order does not exist: ${orderId}` });
 }
@@ -77,9 +77,8 @@ function hasValidStatus(req, res, next) {
 	const { data: { status } = {} } = req.body;
 	const validStatus = ["pending", "preparing", "out-for-delivery"];
 
-	validStatus.includes(status)
-		? next()
-		: status === "delivered"
+	validStatus.includes(status) 
+    ? next() : status === "delivered"
 		? next({ status: 400, message: "A delivered order cannot be changed" })
 		: next({
 				status: 400,
@@ -90,6 +89,7 @@ function hasValidStatus(req, res, next) {
 //function to check if order has valid status for deletion
 function isStatusPending(req, res, next) {
 	const status = res.locals.order.status;
+  console.log("Line 92", res.locals.order.status)
 	if (status && status === "pending") {
 		return next();
 	}
@@ -107,7 +107,7 @@ function create(req, res) {
 
 //Read order based on id
 function read(req, res) {
-	res.json({ data: res.locals.order });
+	res.json({ data: res.locals.order }); //how we send the data to the server
 }
 
 //Update order properties based on id
@@ -125,6 +125,7 @@ function update(req, res) {
 
 //Delete order by id with valid status
 function destroy(req, res) {
+  //const {orderId} = req.params
 	const order = res.locals.order;
 	const index = orders.findIndex((ord) => ord.id === Number(order.Id));
 	orders.splice(index, 1);
