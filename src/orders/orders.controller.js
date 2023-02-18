@@ -73,6 +73,9 @@ function hasValidId(req, res, next) {
 }
 
 //function to check if the status for the order is valid to be changed
+
+```javascript
+
 function hasValidStatus(req, res, next) {
 	const { data: { status } = {} } = req.body;
 	const validStatus = ["pending", "preparing", "out-for-delivery"];
@@ -84,7 +87,7 @@ function hasValidStatus(req, res, next) {
 				status: 400,
 				message: "Order must have a status of pending, preparing, out-for-delivery, delivered",
 		  });
-}
+}```
 
 //function to check if order has valid status for deletion
 function isStatusPending(req, res, next) {
